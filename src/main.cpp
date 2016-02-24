@@ -1,6 +1,8 @@
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <ros/ros.h>
+#include <std_msgs/String.h>
 
 #include <iostream>
 #include <queue>
@@ -20,7 +22,7 @@ void detectAndDisplay( cv::Mat frame );
 
 /** Global variables */
 //-- Note, either copy these two files from opencv/data/haarscascades to your current folder, or change these locations
-cv::String face_cascade_name = "../../../res/haarcascade_frontalface_alt.xml";
+cv::String face_cascade_name = "../../res/haarcascade_frontalface_alt.xml";
 cv::CascadeClassifier face_cascade;
 std::string main_window_name = "Capture - Face detection";
 std::string face_window_name = "Capture - Face";
@@ -31,12 +33,14 @@ cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
 /**
  * @function main
  */
-int main( int argc, const char** argv ) {
+int main( int argc, char** argv ) {
+
+  ros::init(argc, argv, "eyelike");
   CvCapture* capture;
   cv::Mat frame;
 
   // Load the cascades
-  if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n"); return -1; };
+  face_cascade.load("/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml");
 
   cv::namedWindow(main_window_name,CV_WINDOW_NORMAL);
   cv::moveWindow(main_window_name, 400, 100);
